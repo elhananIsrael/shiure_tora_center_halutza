@@ -344,60 +344,83 @@ function Home({
 
   const processRowUpdate = (newRow) => {
     try {
-      // if (!newRow.date || !newRow.ravName) {
+      var oldItem = toraLessonsArr.filter(
+        (lesson) => lesson._id === newRow.id
+      )[0];
+      // console.log(rowModesModel);
+      // console.log(toraLessonsArr);
 
-      //   // console.log(toraLessonsArr, newRow, oldItem);
-      //   if (oldItem) {
-      //     var oldDate = oldItem.date;
-      //     var oldRavName = oldItem.ravName;
-      //     newRow.date = oldDate;
-      //     newRow.ravName = oldRavName;
-      //   }
-      //   setRowModesModel({
-      //     ...rowModesModel,
-      //     [newRow.id]: { mode: GridRowModes.Edit },
-      //   });
-      //   console.log("mytest");
-      //   alert("לא ניתן לשמור שיעור ללא תאריך וללא שם הרב.");
-      //   return newRow;
-      // } else {
+      if (!newRow.date || !newRow.ravName) {
+        // console.log(toraLessonsArr, newRow, oldItem);
 
-      // console.log(rows);
-      var today = new Date();
-      newRow.updateDate = today;
-      var desc = getDescHome(newRow);
-
-      if (newRow.isNew) {
-        // console.log(newRow.date);
-        // console.log("processRowUpdate-if (newRow.isNew)", newRow);
-        // var desc = getDescHome(newRow);
-        addLessonAndSendEMail(
-          newRow.ravName,
-          dateStr(newRow.date),
-          newRow.time,
-          newRow.moreDetails,
-          newRow.contactPersonName,
-          newRow.totalNumLessonsRavCanToday,
-          // newRow.numLessonsLeft,
-          dateStr(newRow.updateDate),
-          "שיעור חדש",
-          desc
-        );
-      } else if (newRow.isNew !== true) {
-        var oldItem = toraLessonsArr.filter(
-          (lesson) => lesson._id === newRow.id
-        )[0];
         if (oldItem) {
-          const fieldNotEquals = isEqualsLessons(oldItem, newRow);
-          // console.log("fieldNotEquals", fieldNotEquals);
-          if (fieldNotEquals !== {}) {
-            desc = getDescHome(newRow, fieldNotEquals);
+          var oldDate = oldItem.date;
+          var oldRavName = oldItem.ravName;
+          newRow.date = oldDate;
+          newRow.ravName = oldRavName;
+        }
+        setRowModesModel({
+          ...rowModesModel,
+          [newRow.id]: { mode: GridRowModes.Edit },
+        });
+        // console.log("mytest");
+        alert("לא ניתן לשמור שיעור ללא תאריך וללא שם הרב.");
+        return newRow;
+      } else {
+        // console.log(rows);
+        var today = new Date();
+        newRow.updateDate = today;
+        var desc = getDescHome(newRow);
 
-            // console.log(newRow.date);
-            // var desc = getDescHome(newRow);
-            // console.log(desc);
-            // console.log("processRowUpdate-if (newRow.isNew !== true)", newRow);
-            // console.log(newRow);
+        if (newRow.isNew) {
+          // console.log(newRow.date);
+          // console.log("processRowUpdate-if (newRow.isNew)", newRow);
+          // var desc = getDescHome(newRow);
+          addLessonAndSendEMail(
+            newRow.ravName,
+            dateStr(newRow.date),
+            newRow.time,
+            newRow.moreDetails,
+            newRow.contactPersonName,
+            newRow.totalNumLessonsRavCanToday,
+            // newRow.numLessonsLeft,
+            dateStr(newRow.updateDate),
+            "שיעור חדש",
+            desc
+          );
+        } else if (newRow.isNew !== true) {
+          // var oldItem = toraLessonsArr.filter(
+          //   (lesson) => lesson._id === newRow.id
+          // )[0];
+          if (oldItem) {
+            const fieldNotEquals = isEqualsLessons(oldItem, newRow);
+            // console.log("fieldNotEquals", fieldNotEquals);
+            if (fieldNotEquals !== {}) {
+              desc = getDescHome(newRow, fieldNotEquals);
+
+              // console.log(newRow.date);
+              // var desc = getDescHome(newRow);
+              // console.log(desc);
+              // console.log("processRowUpdate-if (newRow.isNew !== true)", newRow);
+              // console.log(newRow);
+              updateLessonAndSendEMail(
+                newRow.id,
+                newRow.ravName,
+                dateStr(newRow.date),
+                newRow.time,
+                newRow.moreDetails,
+                newRow.contactPersonName,
+                newRow.totalNumLessonsRavCanToday,
+                // newRow.numLessonsLeft,
+                dateStr(newRow.updateDate),
+                "השיעור עודכן",
+                desc
+              );
+            } else {
+              //when 'oldItem'!=null && fieldNotEquals==={};
+            }
+          } else {
+            //when 'oldItem'===null or something like that.
             updateLessonAndSendEMail(
               newRow.id,
               newRow.ravName,
@@ -411,31 +434,13 @@ function Home({
               "השיעור עודכן",
               desc
             );
-          } else {
-            //when 'oldItem'!=null && fieldNotEquals==={};
           }
-        } else {
-          //when 'oldItem'===null or something like that.
-          updateLessonAndSendEMail(
-            newRow.id,
-            newRow.ravName,
-            dateStr(newRow.date),
-            newRow.time,
-            newRow.moreDetails,
-            newRow.contactPersonName,
-            newRow.totalNumLessonsRavCanToday,
-            // newRow.numLessonsLeft,
-            dateStr(newRow.updateDate),
-            "השיעור עודכן",
-            desc
-          );
         }
+        const updatedRow = { ...newRow, isNew: false };
+        // updateAllNumLessonsLeft(newRow.ravName, newRow.date);
+        // setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+        return updatedRow;
       }
-      const updatedRow = { ...newRow, isNew: false };
-      // updateAllNumLessonsLeft(newRow.ravName, newRow.date);
-      // setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-      return updatedRow;
-      // }
     } catch (error) {
       console.error("error", error);
     }
@@ -710,210 +715,206 @@ function Home({
   try {
     return (
       <>
-        {toraLessonsArr.length > 0 ? (
-          <div style={{ height: 500, width: "100%", direction: "rtl" }}>
-            <div style={{ display: "flex", height: 500 }}>
-              <div style={{ flexGrow: 1, height: 500 }}>
-                <Typography variant="h3" sx={{ margin: "10px" }} align="center">
-                  שיעורים בישובי חלוצה והסביבה
-                </Typography>
+        {/* {toraLessonsArr.length > 0 ? ( */}
+        <div style={{ height: 500, width: "100%", direction: "rtl" }}>
+          <div style={{ display: "flex", height: 500 }}>
+            <div style={{ flexGrow: 1, height: 500 }}>
+              <Typography variant="h3" sx={{ margin: "10px" }} align="center">
+                שיעורים בישובי חלוצה והסביבה
+              </Typography>
 
-                <DataGrid
-                  // cellModesModel={myCellModesModel}
-                  // {{ 1: { name: { mode: GridCellModes.View, ignoreModifications: true } } }}
-                  // />
-                  // loading
-                  localeText={
-                    heIL.components.MuiDataGrid.defaultProps.localeText
-                  }
-                  isCellEditable={(params) => {
-                    const currentRow = rows.find(
-                      (row) => row.id === params.rowNode.id
-                    );
+              <DataGrid
+                // cellModesModel={myCellModesModel}
+                // {{ 1: { name: { mode: GridCellModes.View, ignoreModifications: true } } }}
+                // />
+                // loading
+                localeText={heIL.components.MuiDataGrid.defaultProps.localeText}
+                isCellEditable={(params) => {
+                  const currentRow = rows.find(
+                    (row) => row.id === params.rowNode.id
+                  );
 
-                    // console.log(params);
-                    if (params.field === "ravName" && !currentRow.isNew)
-                      return false;
-                    else return true;
-                  }}
-                  ////////////
+                  // console.log(params);
+                  if (params.field === "ravName" && !currentRow.isNew)
+                    return false;
+                  else return true;
+                }}
+                ////////////
 
-                  // editRowsModel={editRowsModel}
-                  // onEditRowsModelChange={handleEditRowsModelChange}
-                  /////////////
+                // editRowsModel={editRowsModel}
+                // onEditRowsModelChange={handleEditRowsModelChange}
+                /////////////
 
-                  // {params.row.isNew === true ||  (params.row.isNew !== true && )}
-                  // autoHeight={true}
-                  // onCellFocusOut={(
-                  //   params, // GridCellEditCommitParams
-                  //   event, // MuiEvent<MuiBaseEvent>
-                  //   details // GridCallbackDetails
-                  // ) => {
-                  //   console.log("params", params);
-                  //   console.log("event", event);
-                  //   console.log("details", details);
-                  //   // if(params.colDef.)
-                  //   // console.log(details.click);defaultValue type
-                  //   // console.log(event.explicitOriginalTarget?.valueAsNumber);
-                  // }}
-                  headerHeight={85}
-                  disableColumnMenu={true}
-                  sx={{
-                    "& .MuiDataGrid-columnHeaderTitle": {
-                      textOverflow: "clip",
-                      whiteSpace: "break-spaces",
-                      lineHeight: 1,
-                      textAlign: "center",
-                      alignContent: "center",
-                      fontWeight: "bold",
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                      backgroundColor: "rgba(2, 26, 78, 0.671)",
-                      fontSize: 13,
-                    },
-                    "& .MuiDataGrid-virtualScrollerRenderZone": {
-                      "& .MuiDataGrid-row": {
-                        "&:nth-of-type(2n)": {
-                          backgroundColor: "rgba(143, 179, 255, 0.37)",
-                        },
+                // {params.row.isNew === true ||  (params.row.isNew !== true && )}
+                // autoHeight={true}
+                // onCellFocusOut={(
+                //   params, // GridCellEditCommitParams
+                //   event, // MuiEvent<MuiBaseEvent>
+                //   details // GridCallbackDetails
+                // ) => {
+                //   console.log("params", params);
+                //   console.log("event", event);
+                //   console.log("details", details);
+                //   // if(params.colDef.)
+                //   // console.log(details.click);defaultValue type
+                //   // console.log(event.explicitOriginalTarget?.valueAsNumber);
+                // }}
+                headerHeight={85}
+                disableColumnMenu={true}
+                sx={{
+                  "& .MuiDataGrid-columnHeaderTitle": {
+                    textOverflow: "clip",
+                    whiteSpace: "break-spaces",
+                    lineHeight: 1,
+                    textAlign: "center",
+                    alignContent: "center",
+                    fontWeight: "bold",
+                  },
+                  "& .MuiDataGrid-columnHeaders": {
+                    backgroundColor: "rgba(2, 26, 78, 0.671)",
+                    fontSize: 13,
+                  },
+                  "& .MuiDataGrid-virtualScrollerRenderZone": {
+                    "& .MuiDataGrid-row": {
+                      "&:nth-of-type(2n)": {
+                        backgroundColor: "rgba(143, 179, 255, 0.37)",
                       },
                     },
-                    "& .Mui-error": {
-                      // backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
-                      // color: isDark ? "#ff4343" : "#750f0f",
-                      borderColor: theme.palette.error.main,
-                      backgroundColor: `rgb(126,10,15, ${
-                        theme.palette.mode === "dark" ? 0 : 0.1
-                      })`,
-                      color: theme.palette.error.main,
-                    },
-                  }}
-                  rows={rows}
-                  columns={columns}
-                  editMode="row"
-                  onProcessRowUpdateError={(error) => console.log(error)}
-                  // options={{
-                  //   paging: false,
-                  // }}
-                  rowModesModel={rowModesModel}
-                  onRowEditStart={handleRowEditStart}
-                  onRowEditStop={handleRowEditStop}
-                  processRowUpdate={processRowUpdate}
-                  // pagination
-                  // pageSize={6}
-                  // rowsPerPageOptions={[6]}
-                  components={{
-                    // Pagination: CustomPagination,
-                    // Pagination: "",
-                    Toolbar: EditToolbar,
-                    NoRowsOverlay: () => (
-                      <Stack
-                        height="100%"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        אין שיעורים במאגר הנתונים
-                      </Stack>
-                    ),
-                    NoResultsOverlay: () => (
-                      <Stack
-                        height="100%"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        אין שיעורים התואמים לחיפוש זה
-                      </Stack>
-                    ),
-                  }}
-                  componentsProps={{
-                    toolbar: {
-                      setRows,
-                      setRowModesModel,
-                      // printOptions: { disableToolbarButton: true },
-                    },
-                  }}
-                  experimentalFeatures={{ newEditingApi: true }}
-                  initialState={{
-                    columns: {
-                      columnVisibilityModel: {
-                        // Hide column id, the other columns will remain visible
-                        id: false,
-                      },
-                    },
-                    sorting: {
-                      sortModel: [{ field: "updateDate", sort: "desc" }],
-                    },
-                  }}
-                  columnVisibilityModel={columnVisibilityModel}
-                  onColumnVisibilityModelChange={(newModel) => {
-                    var updatedNewModel = {
-                      ...newModel,
+                  },
+                  "& .Mui-error": {
+                    // backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
+                    // color: isDark ? "#ff4343" : "#750f0f",
+                    borderColor: theme.palette.error.main,
+                    backgroundColor: `rgb(126,10,15, ${
+                      theme.palette.mode === "dark" ? 0 : 0.1
+                    })`,
+                    color: theme.palette.error.main,
+                  },
+                }}
+                rows={rows}
+                columns={columns}
+                editMode="row"
+                onProcessRowUpdateError={(error) => console.log(error)}
+                // options={{
+                //   paging: false,
+                // }}
+                rowModesModel={rowModesModel}
+                onRowEditStart={handleRowEditStart}
+                onRowEditStop={handleRowEditStop}
+                processRowUpdate={processRowUpdate}
+                // pagination
+                // pageSize={6}
+                // rowsPerPageOptions={[6]}
+                components={{
+                  // Pagination: CustomPagination,
+                  // Pagination: "",
+                  Toolbar: EditToolbar,
+                  NoRowsOverlay: () => (
+                    <Stack
+                      height="100%"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      אין שיעורים במאגר הנתונים
+                    </Stack>
+                  ),
+                  NoResultsOverlay: () => (
+                    <Stack
+                      height="100%"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      אין שיעורים התואמים לחיפוש זה
+                    </Stack>
+                  ),
+                }}
+                componentsProps={{
+                  toolbar: {
+                    setRows,
+                    setRowModesModel,
+                    // printOptions: { disableToolbarButton: true },
+                  },
+                }}
+                experimentalFeatures={{ newEditingApi: true }}
+                initialState={{
+                  columns: {
+                    columnVisibilityModel: {
+                      // Hide column id, the other columns will remain visible
                       id: false,
-                    };
-                    // console.log(updatedNewModel);
-                    setColumnVisibilityModel(updatedNewModel);
-                  }}
-                  // columnVisibilityModel={{
-                  //   // Hide column id, the other columns will remain visible
-                  //   id: false,
-                  // }}
-                />
+                    },
+                  },
+                  sorting: {
+                    sortModel: [{ field: "updateDate", sort: "desc" }],
+                  },
+                }}
+                columnVisibilityModel={columnVisibilityModel}
+                onColumnVisibilityModelChange={(newModel) => {
+                  var updatedNewModel = {
+                    ...newModel,
+                    id: false,
+                  };
+                  // console.log(updatedNewModel);
+                  setColumnVisibilityModel(updatedNewModel);
+                }}
+                // columnVisibilityModel={{
+                //   // Hide column id, the other columns will remain visible
+                //   id: false,
+                // }}
+              />
 
-                <div style={{ display: "inline-grid" }}>
-                  <Box
-                    component="span"
-                    sx={{
-                      p: 2,
-                      border: "1px dashed grey",
-                      display: "inline-flex",
+              <div style={{ display: "inline-grid" }}>
+                <Box
+                  component="span"
+                  sx={{
+                    p: 2,
+                    border: "1px dashed grey",
+                    display: "inline-flex",
+                  }}
+                >
+                  <Button
+                    style={{ marginBottom: "30px", marginTop: "10px" }}
+                    variant="outlined"
+                    disabled={isNotValidEmail}
+                    onClick={() => {
+                      addOrDeleteEmail(textFieldRef.current.value);
+                      // console.log(ValidateEmail(textFieldRef.current.value));
+                      textFieldRef.current.value = "";
+                      // alert(textFieldRef.current.value);
                     }}
                   >
-                    <Button
-                      style={{ marginBottom: "30px", marginTop: "10px" }}
-                      variant="outlined"
-                      disabled={isNotValidEmail}
-                      onClick={() => {
-                        addOrDeleteEmail(textFieldRef.current.value);
-                        // console.log(ValidateEmail(textFieldRef.current.value));
-                        textFieldRef.current.value = "";
-                        // alert(textFieldRef.current.value);
-                      }}
-                    >
-                      אישור
-                    </Button>
-                    <CacheProvider value={cacheRtl}>
-                      <ThemeProvider theme={theme}>
-                        <div dir="rtl">
-                          <TextField
-                            onChange={(e) => {
-                              setIsNotValidEmail(
-                                !ValidateEmail(e.target.value)
-                              );
-                            }}
-                            id="addDeleteEmailInput"
-                            // error={isNotValidEmail}
-                            inputRef={textFieldRef}
-                            label="הוספת/הסרת אימייל לעדכונים"
-                            defaultValue=""
-                            sx={{ margin: "10px", direction: "ltr" }}
-                            align="center"
-                            helperText="לאימייל זה ישלחו עדכונים על הוספת/הסרת/עדכון שיעורים"
-                          />
-                        </div>
-                      </ThemeProvider>
-                    </CacheProvider>
-                  </Box>
-                </div>
-                <HebCalendarRBC lessonEvents={toraLessonsArr} />
+                    אישור
+                  </Button>
+                  <CacheProvider value={cacheRtl}>
+                    <ThemeProvider theme={theme}>
+                      <div dir="rtl">
+                        <TextField
+                          onChange={(e) => {
+                            setIsNotValidEmail(!ValidateEmail(e.target.value));
+                          }}
+                          id="addDeleteEmailInput"
+                          // error={isNotValidEmail}
+                          inputRef={textFieldRef}
+                          label="הוספת/הסרת אימייל לעדכונים"
+                          defaultValue=""
+                          sx={{ margin: "10px", direction: "ltr" }}
+                          align="center"
+                          helperText="לאימייל זה ישלחו עדכונים על הוספת/הסרת/עדכון שיעורים"
+                        />
+                      </div>
+                    </ThemeProvider>
+                  </CacheProvider>
+                </Box>
               </div>
+              <HebCalendarRBC lessonEvents={toraLessonsArr} />
             </div>
           </div>
-        ) : (
+        </div>
+        {/* ) : (
           <>
             <h1 style={{ textAlign: "center" }}>ברוכים הבאים</h1>
             <Loader />
           </>
-        )}
+        )} */}
       </>
     );
   } catch (error) {

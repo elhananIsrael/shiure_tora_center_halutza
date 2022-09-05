@@ -41,7 +41,7 @@ function EditToolbar(props) {
       const id = `${Math.random() * 1000000000000000000}`;
       // console.log(todayDateStr());
       // console.log(apiRef);
-      // console.log("id",id);
+      // console.log("id", id);
       setRows((oldRows) => [
         {
           id,
@@ -60,9 +60,11 @@ function EditToolbar(props) {
         ...oldModel,
         [id]: { mode: GridRowModes.Edit, fieldToFocus: "ravName" },
       }));
-      // console.log("pageCount", pageCount);
-      if (apiRef.current.getRowsCount() === pageSize) apiRef.current.setPage(1);
-      else apiRef.current.setPage(pageCount - 1);
+      if (apiRef.current.getRowsCount() > 0) {
+        if (apiRef.current.getRowsCount() === pageSize)
+          apiRef.current.setPage(1);
+        else apiRef.current.setPage(pageCount - 1);
+      }
       // console.log("pageSize", pageSize);
       // console.log("pageCount", pageCount);
       // console.log("page", page);
