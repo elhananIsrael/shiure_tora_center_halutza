@@ -92,26 +92,26 @@ function App() {
               let emailsList = "";
               for (let i = 0; i < emailsFromDB.length; i++) {
                 emailsList += emailsFromDB[i].email + ",";
-                if (emailsList !== "") {
-                  const options = {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      emailsList,
-                      eventStatus,
-                      eventDescription,
-                    }),
-                  };
-                  fetch("/api/send-email", options)
-                    .then((response) => response.json())
-                    .then((emailMessageID) => {
-                      // console.log(emailMessageID);
-                      return emailMessageID;
-                    })
-                    .catch((error) => {
-                      console.log("fetch error", error);
-                    });
-                }
+              }
+              if (emailsList !== "") {
+                const options = {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    emailsList,
+                    eventStatus,
+                    eventDescription,
+                  }),
+                };
+                fetch("/api/send-email", options)
+                  .then((response) => response.json())
+                  .then((emailMessageID) => {
+                    // console.log(emailMessageID);
+                    return emailMessageID;
+                  })
+                  .catch((error) => {
+                    console.log("fetch error", error);
+                  });
               }
               // console.log(emailsList);
               return emailsFromDB;
@@ -208,26 +208,26 @@ function App() {
                 let emailsList = "";
                 for (let i = 0; i < emailsFromDB.length; i++) {
                   emailsList += emailsFromDB[i].email + ",";
-                  if (emailsList !== "") {
-                    const options = {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        emailsList,
-                        eventStatus,
-                        eventDescription,
-                      }),
-                    };
-                    fetch("/api/send-email", options)
-                      .then((response) => response.json())
-                      .then((emailMessageID) => {
-                        // console.log(emailMessageID);
-                        return emailMessageID;
-                      })
-                      .catch((error) => {
-                        console.log("fetch error", error);
-                      });
-                  }
+                }
+                if (emailsList !== "") {
+                  const options = {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      emailsList,
+                      eventStatus,
+                      eventDescription,
+                    }),
+                  };
+                  fetch("/api/send-email", options)
+                    .then((response) => response.json())
+                    .then((emailMessageID) => {
+                      // console.log(emailMessageID);
+                      return emailMessageID;
+                    })
+                    .catch((error) => {
+                      console.log("fetch error", error);
+                    });
                 }
                 // console.log(emailsList);
                 return emailsFromDB;
@@ -274,26 +274,26 @@ function App() {
             let emailsList = "";
             for (let i = 0; i < emailsFromDB.length; i++) {
               emailsList += emailsFromDB[i].email + ",";
-              if (emailsList !== "") {
-                const options = {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    emailsList,
-                    eventStatus,
-                    eventDescription,
-                  }),
-                };
-                fetch("/api/send-email", options)
-                  .then((response) => response.json())
-                  .then((emailMessageID) => {
-                    // console.log(emailMessageID);
-                    return emailMessageID;
-                  })
-                  .catch((error) => {
-                    console.log("fetch error", error);
-                  });
-              }
+            }
+            if (emailsList !== "") {
+              const options = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  emailsList,
+                  eventStatus,
+                  eventDescription,
+                }),
+              };
+              fetch("/api/send-email", options)
+                .then((response) => response.json())
+                .then((emailMessageID) => {
+                  // console.log(emailMessageID);
+                  return emailMessageID;
+                })
+                .catch((error) => {
+                  console.log("fetch error", error);
+                });
             }
             // console.log(emailsList);
             return emailsFromDB;
