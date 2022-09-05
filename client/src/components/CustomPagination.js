@@ -1,5 +1,5 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
+// import Box from "@mui/material/Box";
 import {
   gridPageCountSelector,
   gridPageSelector,
@@ -12,15 +12,18 @@ function CustomPagination() {
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
-  return (
-    <Pagination
-      color="primary"
-      count={pageCount}
-      page={page + 1}
-      onChange={(event, value) => apiRef.current.setPage(value - 1)}
-    />
-  );
+  try {
+    return (
+      <Pagination
+        color="primary"
+        count={pageCount}
+        page={page + 1}
+        onChange={(event, value) => apiRef.current.setPage(value - 1)}
+      />
+    );
+  } catch (error) {
+    console.error("error", error);
+  }
 }
 export default CustomPagination;
 

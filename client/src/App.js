@@ -9,12 +9,16 @@ function App() {
   const [toraLessonsArr, setToraLessonsArr] = useState([]);
 
   const getIndex = (arr, key) => {
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i]._id === key) {
-        return i;
+    try {
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i]._id === key) {
+          return i;
+        }
       }
+      return -1; //to handle the case where the value doesn't exist
+    } catch (error) {
+      console.error("error", error);
     }
-    return -1; //to handle the case where the value doesn't exist
   };
 
   const getAllEmailsFromServer = () => {
@@ -52,127 +56,9 @@ function App() {
     eventStatus,
     eventDescription
   ) => {
-    const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ravName,
-        // lessonSubject,
-        // price,
-        // place,
-        date,
-        time,
-        moreDetails,
-        contactPersonName,
-        // contactPersonPhone,
-        totalNumLessonsRavCanToday,
-        // numLessonsLeft,
-        updateDate,
-      }),
-    };
-    fetch("/api/shiureToraHalutza", options)
-      .then((response) => response.json())
-      .then((lessonAdded) => {
-        // console.log(lessonAdded);
-        let newToraLessonsArr = [...toraLessonsArr, lessonAdded];
-        setToraLessonsArr(newToraLessonsArr);
-
-        fetch("/api/emails")
-          .then((response) => {
-            // console.log(response);
-            return response.json();
-          })
-          .then((emailsFromDB) => {
-            // console.log(emailsFromDB);
-            let emailsList = "";
-            for (let i = 0; i < emailsFromDB.length; i++) {
-              emailsList += emailsFromDB[i].email + ",";
-              if (emailsList !== "") {
-                const options = {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    emailsList,
-                    eventStatus,
-                    eventDescription,
-                  }),
-                };
-                fetch("/api/send-email", options)
-                  .then((response) => response.json())
-                  .then((emailMessageID) => {
-                    // console.log(emailMessageID);
-                    return emailMessageID;
-                  })
-                  .catch((error) => {
-                    console.log("fetch error", error);
-                  });
-              }
-            }
-            // console.log(emailsList);
-            return emailsFromDB;
-          })
-          .catch((error) => {
-            console.log("fetch error", error);
-          });
-
-        // getAllEmailsFromServer();
-        return lessonAdded._id;
-      })
-      .catch((error) => {
-        console.log("fetch error", error);
-      });
-  };
-
-  const updateLessonAndSendEMail = (
-    _id,
-    ravName,
-    // lessonSubject,
-    // price,
-    // place,
-    date,
-    time,
-    moreDetails,
-    contactPersonName,
-    // contactPersonPhone,
-    totalNumLessonsRavCanToday,
-    // numLessonsLeft,
-    updateDate,
-    eventStatus,
-    eventDescription
-  ) => {
-    let toraLesson = null;
-    toraLessonsArr
-      .filter((lesson) => lesson._id === _id)
-      .map((item) => {
-        toraLesson = item;
-        // console.log(item);
-        return true;
-      });
-    let toraLessonIndex = null;
-
-    if (toraLesson !== null) {
-      toraLessonIndex = getIndex(toraLessonsArr, _id);
-      const newToraLesson = {
-        _id,
-        ravName,
-        // lessonSubject,
-        // price,
-        // place,
-        date,
-        time,
-        moreDetails,
-        contactPersonName,
-        // contactPersonPhone,
-        totalNumLessonsRavCanToday,
-        // numLessonsLeft,
-        updateDate,
-      };
-      // console.log(newCartItem);
-      let newToraLessonsArr = [...toraLessonsArr];
-      newToraLessonsArr[toraLessonIndex] = newToraLesson;
-      setToraLessonsArr(newToraLessonsArr);
+    try {
       const options = {
-        method: "PUT",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ravName,
@@ -189,11 +75,18 @@ function App() {
           updateDate,
         }),
       };
-      fetch(`/api/shiureToraHalutza/${_id}`, options)
+      fetch("/api/shiureToraHalutza", options)
         .then((response) => response.json())
-        .then((toraLessonUpdated) => {
+        .then((lessonAdded) => {
+          // console.log(lessonAdded);
+          let newToraLessonsArr = [...toraLessonsArr, lessonAdded];
+          setToraLessonsArr(newToraLessonsArr);
+
           fetch("/api/emails")
-            .then((response) => response.json())
+            .then((response) => {
+              // console.log(response);
+              return response.json();
+            })
             .then((emailsFromDB) => {
               // console.log(emailsFromDB);
               let emailsList = "";
@@ -227,11 +120,130 @@ function App() {
               console.log("fetch error", error);
             });
 
-          return toraLessonUpdated;
+          // getAllEmailsFromServer();
+          return lessonAdded._id;
         })
         .catch((error) => {
           console.log("fetch error", error);
         });
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
+
+  const updateLessonAndSendEMail = (
+    _id,
+    ravName,
+    // lessonSubject,
+    // price,
+    // place,
+    date,
+    time,
+    moreDetails,
+    contactPersonName,
+    // contactPersonPhone,
+    totalNumLessonsRavCanToday,
+    // numLessonsLeft,
+    updateDate,
+    eventStatus,
+    eventDescription
+  ) => {
+    try {
+      let toraLesson = null;
+      toraLessonsArr
+        .filter((lesson) => lesson._id === _id)
+        .map((item) => {
+          toraLesson = item;
+          // console.log(item);
+          return true;
+        });
+      let toraLessonIndex = null;
+
+      if (toraLesson !== null) {
+        toraLessonIndex = getIndex(toraLessonsArr, _id);
+        const newToraLesson = {
+          _id,
+          ravName,
+          // lessonSubject,
+          // price,
+          // place,
+          date,
+          time,
+          moreDetails,
+          contactPersonName,
+          // contactPersonPhone,
+          totalNumLessonsRavCanToday,
+          // numLessonsLeft,
+          updateDate,
+        };
+        // console.log(newCartItem);
+        let newToraLessonsArr = [...toraLessonsArr];
+        newToraLessonsArr[toraLessonIndex] = newToraLesson;
+        setToraLessonsArr(newToraLessonsArr);
+        const options = {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ravName,
+            // lessonSubject,
+            // price,
+            // place,
+            date,
+            time,
+            moreDetails,
+            contactPersonName,
+            // contactPersonPhone,
+            totalNumLessonsRavCanToday,
+            // numLessonsLeft,
+            updateDate,
+          }),
+        };
+        fetch(`/api/shiureToraHalutza/${_id}`, options)
+          .then((response) => response.json())
+          .then((toraLessonUpdated) => {
+            fetch("/api/emails")
+              .then((response) => response.json())
+              .then((emailsFromDB) => {
+                // console.log(emailsFromDB);
+                let emailsList = "";
+                for (let i = 0; i < emailsFromDB.length; i++) {
+                  emailsList += emailsFromDB[i].email + ",";
+                  if (emailsList !== "") {
+                    const options = {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        emailsList,
+                        eventStatus,
+                        eventDescription,
+                      }),
+                    };
+                    fetch("/api/send-email", options)
+                      .then((response) => response.json())
+                      .then((emailMessageID) => {
+                        // console.log(emailMessageID);
+                        return emailMessageID;
+                      })
+                      .catch((error) => {
+                        console.log("fetch error", error);
+                      });
+                  }
+                }
+                // console.log(emailsList);
+                return emailsFromDB;
+              })
+              .catch((error) => {
+                console.log("fetch error", error);
+              });
+
+            return toraLessonUpdated;
+          })
+          .catch((error) => {
+            console.log("fetch error", error);
+          });
+      }
+    } catch (error) {
+      console.error("error", error);
     }
   };
 
@@ -283,7 +295,7 @@ function App() {
                   });
               }
             }
-            console.log(emailsList);
+            // console.log(emailsList);
             return emailsFromDB;
           })
           .catch((error) => {
@@ -359,23 +371,27 @@ function App() {
   };
 
   const addEmail = (email) => {
-    const LowerCaseEmail = email.toLowerCase();
-    const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        LowerCaseEmail,
-      }),
-    };
-    fetch("/api/emails", options)
-      .then((response) => response.json())
-      .then((emailAdded) => {
-        // console.log(emailAdded);
-        return emailAdded._id;
-      })
-      .catch((error) => {
-        console.log("fetch error", error);
-      });
+    try {
+      const LowerCaseEmail = email.toLowerCase();
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          LowerCaseEmail,
+        }),
+      };
+      fetch("/api/emails", options)
+        .then((response) => response.json())
+        .then((emailAdded) => {
+          // console.log(emailAdded);
+          return emailAdded._id;
+        })
+        .catch((error) => {
+          console.log("fetch error", error);
+        });
+    } catch (error) {
+      console.error("error", error);
+    }
   };
 
   const removeEmail = (_id) => {
@@ -456,36 +472,40 @@ function App() {
     // numLessonsLeft,
     updateDate
   ) => {
-    const options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ravName,
-        // lessonSubject,
-        // price,
-        // place,
-        date,
-        time,
-        moreDetails,
-        contactPersonName,
-        // contactPersonPhone,
-        totalNumLessonsRavCanToday,
-        // numLessonsLeft,
-        updateDate,
-      }),
-    };
-    fetch("/api/shiureToraHalutza", options)
-      .then((response) => response.json())
-      .then((lessonAdded) => {
-        console.log(lessonAdded);
-        let newToraLessonsArr = [...toraLessonsArr, lessonAdded];
-        setToraLessonsArr(newToraLessonsArr);
-        getAllEmailsFromServer();
-        return lessonAdded._id;
-      })
-      .catch((error) => {
-        console.log("fetch error", error);
-      });
+    try {
+      const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ravName,
+          // lessonSubject,
+          // price,
+          // place,
+          date,
+          time,
+          moreDetails,
+          contactPersonName,
+          // contactPersonPhone,
+          totalNumLessonsRavCanToday,
+          // numLessonsLeft,
+          updateDate,
+        }),
+      };
+      fetch("/api/shiureToraHalutza", options)
+        .then((response) => response.json())
+        .then((lessonAdded) => {
+          console.log(lessonAdded);
+          let newToraLessonsArr = [...toraLessonsArr, lessonAdded];
+          setToraLessonsArr(newToraLessonsArr);
+          getAllEmailsFromServer();
+          return lessonAdded._id;
+        })
+        .catch((error) => {
+          console.log("fetch error", error);
+        });
+    } catch (error) {
+      console.error("error", error);
+    }
   };
 
   const updateLesson = (
@@ -503,41 +523,21 @@ function App() {
     // numLessonsLeft,
     updateDate
   ) => {
-    let toraLesson = null;
-    toraLessonsArr
-      .filter((toraLesson) => toraLesson._id === _id)
-      .map((item) => {
-        toraLesson = item;
-        // console.log(item);
-        return true;
-      });
-    let toraLessonIndex = null;
+    try {
+      let toraLesson = null;
+      toraLessonsArr
+        .filter((toraLesson) => toraLesson._id === _id)
+        .map((item) => {
+          toraLesson = item;
+          // console.log(item);
+          return true;
+        });
+      let toraLessonIndex = null;
 
-    if (toraLesson !== null) {
-      toraLessonIndex = getIndex(toraLessonsArr, _id);
-      const newToraLesson = {
-        _id,
-        ravName,
-        // lessonSubject,
-        // price,
-        // place,
-        date,
-        time,
-        moreDetails,
-        contactPersonName,
-        // contactPersonPhone,
-        totalNumLessonsRavCanToday,
-        // numLessonsLeft,
-        updateDate,
-      };
-      // console.log(newCartItem);
-      let newToraLessonsArr = [...toraLessonsArr];
-      newToraLessonsArr[toraLessonIndex] = newToraLesson;
-      setToraLessonsArr(newToraLessonsArr);
-      const options = {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      if (toraLesson !== null) {
+        toraLessonIndex = getIndex(toraLessonsArr, _id);
+        const newToraLesson = {
+          _id,
           ravName,
           // lessonSubject,
           // price,
@@ -550,14 +550,38 @@ function App() {
           totalNumLessonsRavCanToday,
           // numLessonsLeft,
           updateDate,
-        }),
-      };
-      fetch(`/api/shiureToraHalutza/${_id}`, options)
-        .then((response) => response.json())
-        .then((toraLessonUpdated) => {})
-        .catch((error) => {
-          console.log("fetch error", error);
-        });
+        };
+        // console.log(newCartItem);
+        let newToraLessonsArr = [...toraLessonsArr];
+        newToraLessonsArr[toraLessonIndex] = newToraLesson;
+        setToraLessonsArr(newToraLessonsArr);
+        const options = {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ravName,
+            // lessonSubject,
+            // price,
+            // place,
+            date,
+            time,
+            moreDetails,
+            contactPersonName,
+            // contactPersonPhone,
+            totalNumLessonsRavCanToday,
+            // numLessonsLeft,
+            updateDate,
+          }),
+        };
+        fetch(`/api/shiureToraHalutza/${_id}`, options)
+          .then((response) => response.json())
+          .then((toraLessonUpdated) => {})
+          .catch((error) => {
+            console.log("fetch error", error);
+          });
+      }
+    } catch (error) {
+      console.error("error", error);
     }
   };
 
@@ -584,34 +608,38 @@ function App() {
   };
 
   useEffect(() => {
-    getAllToraLessonsFromServer();
+    try {
+      getAllToraLessonsFromServer();
+    } catch (error) {
+      console.error("error", error);
+    }
   }, []);
+  try {
+    return (
+      <Router>
+        <MyContext.Provider value={[toraLessonsArr, setToraLessonsArr]}>
+          {/* <MyAppBar /> */}
 
-  return (
-    <Router>
-      <MyContext.Provider value={[toraLessonsArr, setToraLessonsArr]}>
-        {/* <MyAppBar /> */}
-
-        {/* A <Routes> looks through its children <Route>s and
+          {/* A <Routes> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-        <div className="myBody">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Home
-                  toraLessonsArr={toraLessonsArr}
-                  updateLessonAndSendEMail={updateLessonAndSendEMail}
-                  deleteLessonAndSendEMail={deleteLessonAndSendEMail}
-                  addLessonAndSendEMail={addLessonAndSendEMail}
-                  addOrDeleteEmail={addOrDeleteEmail}
-                  updateLesson={updateLesson}
-                  removeLesson={removeLesson}
-                  addLesson={addLesson}
-                />
-              }
-            />
-            {/* <Route
+          <div className="myBody">
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Home
+                    toraLessonsArr={toraLessonsArr}
+                    updateLessonAndSendEMail={updateLessonAndSendEMail}
+                    deleteLessonAndSendEMail={deleteLessonAndSendEMail}
+                    addLessonAndSendEMail={addLessonAndSendEMail}
+                    addOrDeleteEmail={addOrDeleteEmail}
+                    updateLesson={updateLesson}
+                    removeLesson={removeLesson}
+                    addLesson={addLesson}
+                  />
+                }
+              />
+              {/* <Route
               path="/"
               element={
                 <Home
@@ -630,14 +658,17 @@ function App() {
               path="/admin"
               element={<Admin productsArr={productsArr} />}
             /> */}
-            {/* <Route path="/users">
+              {/* <Route path="/users">
             <Users />
           </Route> */}
-          </Routes>
-        </div>
-      </MyContext.Provider>
-    </Router>
-  );
+            </Routes>
+          </div>
+        </MyContext.Provider>
+      </Router>
+    );
+  } catch (error) {
+    console.error("error", error);
+  }
 }
 
 export default App;
