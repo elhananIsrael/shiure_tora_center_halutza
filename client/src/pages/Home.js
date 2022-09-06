@@ -771,7 +771,8 @@ function Home({
                     fontWeight: "bold",
                   },
                   "& .MuiDataGrid-columnHeaders": {
-                    backgroundColor: "rgba(2, 26, 78, 0.671)",
+                    backgroundColor: "rgb(0, 50, 155)",
+                    color: "white",
                     fontSize: 13,
                   },
                   "& .MuiDataGrid-virtualScrollerRenderZone": {
