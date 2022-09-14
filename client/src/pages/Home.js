@@ -525,6 +525,12 @@ function Home({
       headerName: "תאריך",
       width: 105,
       type: "date",
+      //   renderCell: (params) => <ReactJewishDatePicker
+      //   value={params.row.date}
+      //   onClick={(day: BasicJewishDay) => {
+      //     setBasicJewishDay(day);
+      //   }}
+      // />,
       preProcessEditCellProps: (params) => {
         try {
           // console.log(params);
@@ -718,8 +724,13 @@ function Home({
         {/* {toraLessonsArr.length > 0 ? ( */}
         <div style={{ height: 500, width: "100%", direction: "rtl" }}>
           <div style={{ display: "flex", height: 500 }}>
-            <div style={{ flexGrow: 1, height: 500 }}>
-              <Typography variant="h3" sx={{ margin: "10px" }} align="center">
+            <div style={{ flexGrow: 1, height: 500, width: "100%" }}>
+              <Typography
+                variant="h3"
+                component="h3"
+                sx={{ margin: "10px" }}
+                align="center"
+              >
                 שיעורים בישובי חלוצה והסביבה
               </Typography>
 
@@ -799,6 +810,7 @@ function Home({
                 // options={{
                 //   paging: false,
                 // }}
+                // style={{ minHeight: 800 }}
                 rowModesModel={rowModesModel}
                 onRowEditStart={handleRowEditStart}
                 onRowEditStop={handleRowEditStop}

@@ -1,6 +1,6 @@
 function About() {
   try {
-    return <h1>About</h1>;
+    return <h1>אודות</h1>;
   } catch (error) {
     console.error("error", error);
   }
