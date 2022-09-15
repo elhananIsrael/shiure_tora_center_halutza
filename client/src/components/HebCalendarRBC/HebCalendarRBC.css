@@ -224,17 +224,17 @@ a:not([href]):hover .rbc-event-title {
   }
 } */
 /* Use a media query to add a breakpoint at 800px: */
-/* @media screen and (max-width: 800px) {
-  .heightResponsive {
-    height: 200vh;
-  }
-} */
-/* Use a media query to add a breakpoint at 600px: */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .heightResponsive {
     height: 200vh;
   }
 }
+/* Use a media query to add a breakpoint at 600px: */
+/* @media screen and (max-width: 600px) {
+  .heightResponsive {
+    height: 200vh;
+  }
+} */
 /* @media (max-width: 600px) {
 
 } */

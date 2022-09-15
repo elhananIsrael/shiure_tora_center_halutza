@@ -468,142 +468,12 @@ function Home({
       // flex: 1,
     },
     {
-      field: "updateDate",
-      headerName: "תאריך עדכון אחרון",
-      width: 95,
-      type: "date",
-      editable: false,
-      // flex: 1,
-    },
-    {
-      field: "ravName",
-      headerName: "שם הרב",
-      preProcessEditCellProps: (params) => {
-        try {
-          // console.log(params);
-          const hasError = !params.props.value;
-          // console.log(params.props.value, params.row.date);
-          setRowModesModel({
-            ...rowModesModel,
-            [params.id]: { mode: GridRowModes.Edit, ravNameError: hasError },
-          });
-          return { ...params.props, error: !params.props.value };
-        } catch (error) {
-          console.error("error", error);
-        }
-      },
-      // width: 350,
-      type: "string",
-      editable: true,
-      flex: 1,
-    },
-    // {
-    //   field: "lessonSubject",
-    //   headerName: "נושא השיעור",
-    //   // width: 350,
-    //   type: "string",
-    //   editable: true,
-    // },
-    // {
-    //   field: "price",
-    //   headerName: "מחיר",
-    //   width: 70,
-    //   type: "number",
-    //   editable: true,
-    // },
-    // {
-    //   field: "place",
-    //   headerName: "מיקום (ישוב ואולם בישוב)",
-    //   // width: 240,
-    //   // headerClassName: "super-app-theme--header",
-    //   // headerAlign: "center",
-    //   type: "string",
-    //   editable: true,
-    // },
-    {
-      field: "date",
-      headerName: "תאריך",
-      width: 105,
-      type: "date",
-      //   renderCell: (params) => <ReactJewishDatePicker
-      //   value={params.row.date}
-      //   onClick={(day: BasicJewishDay) => {
-      //     setBasicJewishDay(day);
-      //   }}
-      // />,
-      preProcessEditCellProps: (params) => {
-        try {
-          // console.log(params);
-          const hasError = !params.props.value;
-          // console.log(params.props.value, params.row.ravName);
-          setRowModesModel({
-            ...rowModesModel,
-            [params.id]: { mode: GridRowModes.Edit, dateError: hasError },
-          });
-          return { ...params.props, error: !params.props.value };
-        } catch (error) {
-          console.error("error", error);
-        }
-      },
-      // error: true,
-      // "string",
-      // require,
-      editable: true,
-      // flex: 1,
-    },
-    {
-      field: "time",
-      headerName: "שעה",
-      width: 95,
-      type: "string",
-      editable: true,
-      // flex: 1,
-    },
-    {
-      field: "moreDetails",
-      headerName: "פרטים נוספים",
-      // width: 240,
-      type: "string",
-      editable: true,
-      flex: 1,
-    },
-    {
-      field: "contactPersonName",
-      headerName: "שם איש הקשר",
-      // width: 240,
-      type: "string",
-      editable: true,
-      flex: 1,
-    },
-    // {
-    //   field: "contactPersonPhone",
-    //   headerName: "פלאפון/טלפון של איש הקשר",
-    //   // width: 240,
-    //   type: "string",
-    //   editable: true,
-    // },
-    {
-      field: "totalNumLessonsRavCanToday",
-      headerName: "מקסימום שיעורים שהרב יכול להעביר",
-      width: 70,
-      type: "number",
-      // renderHeader: () => <strong>מקסימום שיעורים שהרב יכול להעביר</strong>,
-      editable: true,
-      // flex: 1,
-    },
-    // {
-    //   field: "numLessonsLeft",
-    //   headerName: "מספר שיעורים שעוד ניתן לקבוע עם הרב",
-    //   width: 70,
-    //   type: "number",
-    //   editable: false,
-    //   // flex: 1,
-    // },
-    {
       field: "actions",
       type: "actions",
       headerName: "עדכון/מחיקה",
       width: 100,
+      headerAlign: "right",
+      align: "right",
       cellClassName: "actions",
       // disableExport: true,
       getActions: ({ id }) => {
@@ -642,6 +512,118 @@ function Home({
           />,
         ];
       },
+    },
+
+    {
+      field: "totalNumLessonsRavCanToday",
+      headerName: "מקסימום שיעורים שהרב יכול להעביר",
+      width: 72,
+      type: "number",
+      // renderHeader: () => <strong>מקסימום שיעורים שהרב יכול להעביר</strong>,
+      headerAlign: "right",
+      align: "right",
+      editable: true,
+      // flex: 1,
+    },
+    {
+      field: "contactPersonName",
+      headerName: "שם איש הקשר",
+      // width: 240,
+      minWidth: 150,
+      type: "string",
+      headerAlign: "right",
+      align: "right",
+      editable: true,
+      flex: 1,
+    },
+    {
+      field: "moreDetails",
+      headerName: "פרטים נוספים",
+      // width: 240,
+      minWidth: 150,
+      type: "string",
+      headerAlign: "right",
+      align: "right",
+      editable: true,
+      flex: 1,
+    },
+    {
+      field: "time",
+      headerName: "שעה",
+      width: 95,
+      type: "string",
+      headerAlign: "right",
+      align: "right",
+      editable: true,
+      // flex: 1,
+    },
+    {
+      field: "date",
+      headerName: "תאריך",
+      width: 105,
+      type: "date",
+      //   renderCell: (params) => <ReactJewishDatePicker
+      //   value={params.row.date}
+      //   onClick={(day: BasicJewishDay) => {
+      //     setBasicJewishDay(day);
+      //   }}
+      // />,
+      preProcessEditCellProps: (params) => {
+        try {
+          // console.log(params);
+          const hasError = !params.props.value;
+          // console.log(params.props.value, params.row.ravName);
+          setRowModesModel({
+            ...rowModesModel,
+            [params.id]: { mode: GridRowModes.Edit, dateError: hasError },
+          });
+          return { ...params.props, error: !params.props.value };
+        } catch (error) {
+          console.error("error", error);
+        }
+      },
+      // error: true,
+      // "string",
+      // require,
+      headerAlign: "right",
+      align: "right",
+      editable: true,
+      // flex: 1,
+    },
+    {
+      field: "ravName",
+      headerName: "שם הרב",
+      preProcessEditCellProps: (params) => {
+        try {
+          // console.log(params);
+          const hasError = !params.props.value;
+          // console.log(params.props.value, params.row.date);
+          setRowModesModel({
+            ...rowModesModel,
+            [params.id]: { mode: GridRowModes.Edit, ravNameError: hasError },
+          });
+          return { ...params.props, error: !params.props.value };
+        } catch (error) {
+          console.error("error", error);
+        }
+      },
+      // width: 350,
+      type: "string",
+      headerAlign: "right",
+      align: "right",
+      editable: true,
+      minWidth: 150,
+      flex: 1,
+    },
+    {
+      field: "updateDate",
+      headerName: "תאריך עדכון אחרון",
+      width: 95,
+      type: "date",
+      headerAlign: "right",
+      align: "right",
+      editable: false,
+      // flex: 1,
     },
   ];
 
@@ -682,6 +664,20 @@ function Home({
         divRef.current.style.height = `${60.5 * tempRows.length}px`;
         console.log(divRef.current.style.height);
       }
+      ///////////////////////////
+      const dataGridInDoc = document.querySelector(
+        ".MuiDataGrid-virtualScroller"
+      );
+      if (dataGridInDoc !== null) {
+        // const width = dataGridInDoc.clientWidth;
+        const width = dataGridInDoc.offsetWidth;
+        // height = dataGridInDoc.clientHeight;
+        document
+          .querySelector(".MuiDataGrid-virtualScroller")
+          // .scrollTo(width, 0);
+          .scrollTo(width + width, 0);
+      }
+      ///////////////////////////
       // console.log("tempRows", tempRows);
     } catch (error) {
       console.error("error", error);
@@ -722,7 +718,8 @@ function Home({
     return (
       <>
         {/* {toraLessonsArr.length > 0 ? ( */}
-        <div style={{ height: 500, width: "100%", direction: "rtl" }}>
+        <div style={{ height: 500, width: "100%" }}>
+          {/* <div className="ltrDataGrid" style={{ height: 500, width: "100%" }}> */}
           <div style={{ display: "flex", height: 500 }}>
             <div style={{ flexGrow: 1, height: 500, width: "100%" }}>
               <Typography
@@ -773,6 +770,28 @@ function Home({
                 headerHeight={85}
                 disableColumnMenu={true}
                 sx={{
+                  // "& .MuiDataGrid-root.MuiDataGrid-root--densityStandard": {
+                  //   direction: "ltr !important",
+                  //   transform: "rotateY(180deg)",
+                  // },
+                  //  "& .MuiButtonBase-root.MuiButton-root.MuiButton-text.MuiButton-textPrimary": {
+                  //     transform: "rotateY(180deg)",
+                  //     color: "#141414 !important",
+                  //   },
+                  //   "& .MuiDataGrid-columnHeaderTitle": {
+                  //     transform: "rotateY(180deg)",
+                  //   },
+                  //   "& .MuiDataGrid-cellContent": {
+                  //     transform: "rotateY(180deg)",
+                  //   },
+                  //   "& .MuiDataGrid-footerContainer": {
+                  //     transform: "rotateY(180deg)",
+                  //   },
+                  //   "& .MuiButton-startIcon.MuiButton-iconSizeSmall": {
+                  //     marginLeft: "-2px !important",
+                  //     marginRight: "8px !important",
+                  //   },
+                  ///////////////////////////////////////////
                   "& .MuiDataGrid-columnHeaderTitle": {
                     textOverflow: "clip",
                     whiteSpace: "break-spaces",

@@ -41,15 +41,15 @@
   }
 } */
 /* Use a media query to add a breakpoint at 800px: */
-/* @media screen and (max-width: 800px) {
-  .custom-date-header {
-    flex-direction: column;
-  }
-} */
-/* Use a media query to add a breakpoint at 600px: */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .custom-date-header {
     flex-direction: column;
   }
 }
+/* Use a media query to add a breakpoint at 600px: */
+/* @media screen and (max-width: 600px) {
+  .custom-date-header {
+    flex-direction: column;
+  }
+} */
 /* /////////////////////////////////////////////// */
