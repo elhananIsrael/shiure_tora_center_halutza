@@ -299,7 +299,7 @@ function HebCalendarRBC({ lessonEvents }) {
   };
   try {
     return (
-      <div>
+      <div className="heightResponsive">
         <br />
         <Calendar
           views={["day", "agenda", "month"]}
@@ -324,7 +324,7 @@ function HebCalendarRBC({ lessonEvents }) {
             // },
           }}
           events={eventsData}
-          style={{ height: "100vh" }}
+          // style={{ height: "100vh" }}
           onSelectEvent={(event) => {
             // console.log(event);
             if (event.className === "shiureTora") alert(event.description);
