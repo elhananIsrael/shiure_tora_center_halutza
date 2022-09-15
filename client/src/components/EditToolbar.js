@@ -69,12 +69,25 @@ function EditToolbar(props) {
       // console.log("pageCount", pageCount);
       // console.log("page", page);
       // console.log("rows count", apiRef.current.getRowsCount());
-
-      document.querySelector(".MuiDataGrid-virtualScroller").scrollTo(
-        0,
-        0
-        // document.querySelector(".MuiDataGrid-virtualScroller").scrollHeight
+      ///////////////////////////
+      const dataGridInDoc = document.querySelector(
+        ".MuiDataGrid-virtualScroller"
       );
+      if (dataGridInDoc !== null) {
+        // const width = dataGridInDoc.clientWidth;
+        const width = dataGridInDoc.offsetWidth;
+        // height = dataGridInDoc.clientHeight;
+        document
+          .querySelector(".MuiDataGrid-virtualScroller")
+          // .scrollTo(width, 0);
+          .scrollTo(width + width, 0);
+      }
+      ///////////////////////////
+      // document.querySelector(".MuiDataGrid-virtualScroller").scrollTo(
+      //   0,
+      //   0
+      //   // document.querySelector(".MuiDataGrid-virtualScroller").scrollHeight
+      // );
     } catch (error) {
       console.error("error", error);
     }
