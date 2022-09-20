@@ -130,6 +130,8 @@ const getDescHome = (item, fieldNotEqualsArr = []) => {
         ? getNotEqualFieldToDesc("updateDate", fieldNotEqualsArr["updateDate"])
         : ""
     }`;
+    // console.log("item", item);
+    // console.log("myDesc", myDesc);
     return myDesc;
   } catch (error) {
     console.error("error", error);
@@ -344,6 +346,12 @@ function Home({
 
   const processRowUpdate = (newRow) => {
     try {
+      // var nr = newRow;
+      // var today = new Date();
+      // nr.updateDate = today;
+      // console.log(nr, getDescHome(nr));
+      // return null;
+
       var oldItem = toraLessonsArr.filter(
         (lesson) => lesson._id === newRow.id
       )[0];
@@ -473,7 +481,7 @@ function Home({
       headerName: "עדכון/מחיקה",
       width: 100,
       headerAlign: "right",
-      align: "right",
+      // align: "right",
       cellClassName: "actions",
       // disableExport: true,
       getActions: ({ id }) => {
@@ -521,7 +529,7 @@ function Home({
       type: "number",
       // renderHeader: () => <strong>מקסימום שיעורים שהרב יכול להעביר</strong>,
       headerAlign: "right",
-      align: "right",
+      // align: "right",
       editable: true,
       // flex: 1,
     },
@@ -532,7 +540,7 @@ function Home({
       minWidth: 150,
       type: "string",
       headerAlign: "right",
-      align: "right",
+      // align: "right",
       editable: true,
       flex: 1,
     },
@@ -543,7 +551,7 @@ function Home({
       minWidth: 150,
       type: "string",
       headerAlign: "right",
-      align: "right",
+      // align: "right",
       editable: true,
       flex: 1,
     },
@@ -553,7 +561,7 @@ function Home({
       width: 95,
       type: "string",
       headerAlign: "right",
-      align: "right",
+      // align: "right",
       editable: true,
       // flex: 1,
     },
@@ -586,7 +594,7 @@ function Home({
       // "string",
       // require,
       headerAlign: "right",
-      align: "right",
+      // align: "right",
       editable: true,
       // flex: 1,
     },
@@ -610,7 +618,7 @@ function Home({
       // width: 350,
       type: "string",
       headerAlign: "right",
-      align: "right",
+      // align: "right",
       editable: true,
       minWidth: 150,
       flex: 1,
@@ -621,7 +629,7 @@ function Home({
       width: 95,
       type: "date",
       headerAlign: "right",
-      align: "right",
+      // align: "right",
       editable: false,
       // flex: 1,
     },
@@ -812,6 +820,16 @@ function Home({
                       },
                     },
                   },
+                  "& .MuiToolbar-root-MuiTablePagination-toolbar": {
+                    direction: "ltr",
+                  },
+                  "& .MuiTablePagination-displayedRows": {
+                    direction: "rtl",
+                  },
+                  "& .MuiDataGrid-toolbarContainer": {
+                    direction: "rtl",
+                  },
+                  "& .MuiDataGrid-cell": { direction: "rtl" },
                   "& .Mui-error": {
                     // backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
                     // color: isDark ? "#ff4343" : "#750f0f",

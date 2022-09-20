@@ -7,21 +7,21 @@
 }
 
 /* ///////////////////////////////// */
-.css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar {
+/* .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar {
   direction: ltr;
   /* color: rgba(143, 179, 255, 0.37);
   background-color: rgba(2, 26, 78, 0.671) */
-}
-.css-levciy-MuiTablePagination-displayedRows {
+/* }  */
+/* .css-levciy-MuiTablePagination-displayedRows {
   direction: rtl;
-}
+} */
 /* /////////////////////////////////////////////// */
 /* .ltrDataGrid {
   direction: ltr;
 } */
-.css-1j9kmqg-MuiDataGrid-toolbarContainer {
+/* .css-1j9kmqg-MuiDataGrid-toolbarContainer {
   direction: rtl;
-}
+} */
 /* Use a media query to add a breakpoint at 800px: */
 /* @media screen and (max-width: 800px) {
   .rtlOnDesktop {
