@@ -27,6 +27,7 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { prefixer } from "stylis";
 import { HDate } from "@hebcal/core";
+import { get } from "mongoose";
 
 const dateStr = (myDate) => {
   try {
@@ -205,6 +206,10 @@ EditToolbar.propTypes = {
 };
 
 function Home({
+  getAllEmailsFromServerAsync,
+  sendEmails,
+  addEmail,
+  removeEmail,
   toraLessonsArr,
   addOrDeleteEmail,
   updateLessonAndSendEMail,
@@ -925,8 +930,34 @@ function Home({
                     style={{ marginBottom: "30px", marginTop: "10px" }}
                     variant="outlined"
                     disabled={isNotValidEmail}
-                    onClick={() => {
-                      addOrDeleteEmail(textFieldRef.current.value);
+                    onClick={async () => {
+                      //////////////////////////////////////////////
+                      // addOrDeleteEmail(textFieldRef.current.value);
+                      //////////////////////////////////////////////
+                      let emailToAdd = textFieldRef.current.value;
+                      let allEmails = await getAllEmailsFromServerAsync();
+                      const myEmail = allEmails.filter(
+                        (item) => item.email === emailToAdd
+                      );
+                      // console.log(myEmail);
+                      if (myEmail.length > 0) {
+                        // let result = await
+                        removeEmail(myEmail[0]._id).then(() => {
+                          alert("האימייל שלך הוסר ממערכת עדכוני השיעורים");
+                          sendEmails("", "", 2);
+                        });
+
+                        // console.log("resultRemove", result);
+                      } else {
+                        // let result = await
+                        addEmail(`${emailToAdd}`).then(() => {
+                          alert("האימייל שלך נרשם למערכת עדכוני השיעורים");
+                          sendEmails("", "", 2);
+                        });
+                        // console.log("resultAdd", result);
+                      }
+                      //////////////////////////////////////////////
+
                       // console.log(ValidateEmail(textFieldRef.current.value));
                       textFieldRef.current.value = "";
                       // alert(textFieldRef.current.value);

@@ -40,6 +40,28 @@ function App() {
       });
   };
 
+  const getAllEmailsFromServerAsync = async () => {
+    try {
+      let response = await fetch("/api/emails");
+      // console.log("response", response);
+      let allEmailsList = await response.json();
+      // console.log("allEmailsList", allEmailsList);
+      // .then((response) => {
+      //   return response.json();
+      // })
+      // .then((emailsFromDB) => {
+      // console.log(allEmailsList);
+      let emailToSent = "";
+      for (let i = 0; i < allEmailsList.length; i++) {
+        emailToSent += allEmailsList[i].email + ",";
+      }
+      // console.log(emailToSent);
+      return allEmailsList;
+    } catch (error) {
+      console.log("fetch error", error);
+    }
+  };
+
   const addLessonAndSendEMail = (
     ravName,
     // lessonSubject,
@@ -101,6 +123,7 @@ function App() {
                     emailsList,
                     eventStatus,
                     eventDescription,
+                    messageType: 1,
                   }),
                 };
                 fetch("/api/send-email", options)
@@ -217,6 +240,7 @@ function App() {
                       emailsList,
                       eventStatus,
                       eventDescription,
+                      messageType: 1,
                     }),
                   };
                   fetch("/api/send-email", options)
@@ -283,6 +307,7 @@ function App() {
                   emailsList,
                   eventStatus,
                   eventDescription,
+                  messageType: 1,
                 }),
               };
               fetch("/api/send-email", options)
@@ -370,81 +395,70 @@ function App() {
       });
   };
 
-  const addEmail = (email) => {
+  const addEmail = async (email) => {
     try {
       const LowerCaseEmail = email.toLowerCase();
+      // console.log("LowerCaseEmail", LowerCaseEmail);
       const options = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          LowerCaseEmail,
+          email: LowerCaseEmail,
         }),
       };
-      fetch("/api/emails", options)
-        .then((response) => response.json())
-        .then((emailAdded) => {
-          // console.log(emailAdded);
-          return emailAdded._id;
-        })
-        .catch((error) => {
-          console.log("fetch error", error);
-        });
+      // console.log("options", options);
+      let response = await fetch("/api/emails", options);
+      let emailAdded = await response.json();
+      // console.log("emailAdded", emailAdded);
+      return emailAdded;
     } catch (error) {
       console.error("error", error);
     }
   };
 
-  const removeEmail = (_id) => {
-    fetch(`/api/emails/${_id}`, { method: "DELETE" })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-        // if (newCartArr.filter((product) => product._id !== _id).length === 0) {
-        //   setTimeout(getAllProductsFromServer, 5000); }
-      })
-      .catch((error) => {
-        console.log("fetch error", error);
+  const removeEmail = async (_id) => {
+    try {
+      let response = await fetch(`/api/emails/${_id}`, {
+        method: "DELETE",
       });
+      let emailDeleted = await response.json();
+      // console.log(emailDeleted);
+      return emailDeleted;
+    } catch (error) {
+      console.log("fetch error", error);
+    }
   };
 
-  const sendEmails = (eventStatus, eventDescription) => {
-    fetch("/api/emails")
-      .then((response) => {
-        return response.json();
-      })
-      .then((emailsFromDB) => {
-        console.log(emailsFromDB);
-        let emailsList = "";
-        for (let i = 0; i < emailsFromDB.length; i++) {
-          emailsList += emailsFromDB[i].email + ",";
-        }
-        console.log(emailsList);
+  const sendEmails = async (eventStatus, eventDescription, messageType) => {
+    try {
+      let allEmailsFromDB = await getAllEmailsFromServerAsync();
+      // console.log(allEmailsFromDB);
+      let emailsList = "";
+      for (let i = 0; i < allEmailsFromDB.length; i++) {
+        emailsList += allEmailsFromDB[i].email + ",";
+      }
+      // console.log(emailsList);
+      /////////////////////////////////////////
+      if (emailsList !== "") {
+        const options = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            emailsList,
+            eventStatus,
+            eventDescription,
+            messageType,
+          }),
+        };
+        let response = await fetch("/api/send-email", options);
+        let emailMessageID = await response.json();
+        // console.log(emailMessageID);
+        return emailMessageID;
         /////////////////////////////////////////
-        if (emailsList !== "") {
-          const options = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              emailsList,
-              eventStatus,
-              eventDescription,
-            }),
-          };
-          fetch("/api/send-email", options)
-            .then((response) => response.json())
-            .then((emailMessageID) => {
-              console.log(emailMessageID);
-              return emailMessageID;
-            })
-            .catch((error) => {
-              console.log("fetch error", error);
-            });
-        }
-        /////////////////////////////////////////
-      })
-      .catch((error) => {
-        console.log("fetch error", error);
-      });
+      }
+    } catch (error) {
+      console.log("fetch error", error);
+    }
   };
 
   const getAllToraLessonsFromServer = () => {
@@ -628,6 +642,10 @@ function App() {
                 path="/"
                 element={
                   <Home
+                    getAllEmailsFromServerAsync={getAllEmailsFromServerAsync}
+                    sendEmails={sendEmails}
+                    addEmail={addEmail}
+                    removeEmail={removeEmail}
                     toraLessonsArr={toraLessonsArr}
                     updateLessonAndSendEMail={updateLessonAndSendEMail}
                     deleteLessonAndSendEMail={deleteLessonAndSendEMail}

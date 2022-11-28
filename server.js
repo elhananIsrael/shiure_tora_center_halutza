@@ -221,7 +221,7 @@ try {
     Emails.find({ query }, (err, emails) => {
       if (!isEmpty(err)) console.log("err", err);
       if (!isEmpty(query)) console.log("query", query);
-      // console.log(products);
+      // console.log(emails);
       res.send(emails);
     });
   });
@@ -260,24 +260,42 @@ try {
   });
 
   //sending email
-  const { AUTHORIZATION_TOKEN, EVENT_ID } = process.env;
+  const {
+    AUTHORIZATION_TOKEN,
+    EVENT_ID,
+    EVENT_ID_UPDATED_EMAILS_LIST,
+    UPDATED_EMAILS_LIST_SEND_TO,
+  } = process.env;
   app.post("/api/send-email", function (req, res) {
-    const { emailsList, eventStatus, eventDescription } = req.body;
+    const { emailsList, eventStatus, eventDescription, messageType } = req.body;
+    var emailTo = "shiure.tora.halutza@gmail.com";
+    var eventId = EVENT_ID;
+    if (messageType === 1) {
+      emailTo = emailsList;
+      eventId = EVENT_ID;
+    } else if (messageType === 2) {
+      emailTo = UPDATED_EMAILS_LIST_SEND_TO;
+      eventId = EVENT_ID_UPDATED_EMAILS_LIST;
+    }
     const courier = CourierClient({
       authorizationToken: AUTHORIZATION_TOKEN,
     });
     courier
       .send({
-        eventId: EVENT_ID, // your Notification ID
+        eventId, // your Notification ID
         recipientId: "RECIPIENT_ID", // usually your system's User ID
         profile: {
-          email: emailsList,
+          email: emailTo,
         },
-        data: { eventStatus, eventDescription }, // optional variables for merging into templates
+        data: {
+          eventStatus,
+          eventDescription,
+          updatesEmailsToSend: emailsList,
+        }, // optional variables for merging into templates
       })
       .then((resp) => {
         console.log("Email sent", resp);
-        console.log("emails List", emailsList);
+        // console.log("emails List", emailsList);
         res.send(resp);
       })
       .catch((error) => {
